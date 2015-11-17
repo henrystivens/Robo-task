@@ -121,32 +121,47 @@ class RoboFile extends \Robo\Tasks
       }
     }
 
-  /**
-   * @description Crea un modelo, por defecto de ActiveRecord
-   *
-   * @param string $modelName Nombre del modelo
-   */
-  public function kumbiaCreateModel($modelName, $modelClass = 'ActiveRecord') {
-    $file = "app/models/{$modelName}.php";
-    $fs = new Filesystem();
-    if (!$fs->exists($file)) {
-      $this->say("<info>Creando Modelo</info>");
-      //crear archivo
-      $fs->touch($file);
-      //escribir template
-      $modelName = ucfirst($modelName);
-      $this->taskWriteToFile($file)
-         ->line("<?php")
-         ->line("\tclass {$modelName} extends {$modelClass} {")
-         ->line("\t\t")
-         ->line("\t}")
-         ->run();
+    /**
+     * Crea un modelo, por defecto de ActiveRecord
+     * 
+     * @param string $modelName
+     * @param string $modelClass Optional
+     */
+    public function kumbiaCreateModel($modelName, $modelClass = 'ActiveRecord')
+    {
+        $year = date('Y');
+        $phpDoc = "\n/**\n"
+            . " * Class to manage the '$modelName' table\n"
+            . " *\n"
+            . " * PHP version 5.x\n"
+            . " *\n" 
+            . " * @category    App\n"
+            . " * @package     Models\n"
+            . " * @author      Your full name or nickname <your@email.com>\n"
+            . " * @copyright   $year Your name or business name\n"
+            . " */";
+        $file = "app/models/{$modelName}.php";
+        $fs = new Filesystem();
+        if (!$fs->exists($file)) {
+            $this->say("<info>Creando modelo...</info>");
+            //crear archivo
+            $fs->touch($file);
+            //escribir template
+            $modelName = ucfirst($modelName);
+            $this->taskWriteToFile($file)
+                ->line("<?php")
+                ->line($phpDoc)
+                ->line("class {$modelName} extends {$modelClass}")
+                ->line("{")
+                ->line("\t")
+                ->line("}")
+                ->run();
 
-      $this->say("<info>Modelo creado en {$file}</info>");
-    } else {
-      $this->say("<error>Modelo ya existía en {$file}</error>");
+            $this->say("<info>Modelo creado en {$file}</info>");
+        } else {
+            $this->say("<error>Modelo ya existía en {$file}</error>");
+        }
     }
-  }
 
   /**
    * @description Crea un controlador scaffold para un modelo
