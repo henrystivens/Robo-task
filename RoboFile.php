@@ -100,7 +100,7 @@ class RoboFile extends \Robo\Tasks
         //crear archivo
         $fs->touch($file);
         //escribir template
-        $controllerName = ucfirst($controllerName);
+        $controllerName = str_replace(' ', '', ucwords(str_replace('_', ' ', $controllerName)));
         $this->taskWriteToFile($file)
            ->line("<?php")
            ->line("\tclass {$controllerName}Controller extends AppController {")
@@ -147,7 +147,7 @@ class RoboFile extends \Robo\Tasks
             //crear archivo
             $fs->touch($file);
             //escribir template
-            $modelName = ucfirst($modelName);
+            $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $modelName)));
             $this->taskWriteToFile($file)
                 ->line("<?php")
                 ->line($phpDoc)
@@ -177,7 +177,7 @@ class RoboFile extends \Robo\Tasks
       //crear archivo
       $fs->touch($file);
       //escribir template
-      $controllerName = ucfirst($controllerName);
+      $controllerName = str_replace(' ', '', ucwords(str_replace('_', ' ', $controllerName)));
       $this->taskWriteToFile($file)
          ->line("<?php")
          ->line("\tclass {$controllerName}Controller extends ScaffoldController {")
